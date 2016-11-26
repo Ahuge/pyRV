@@ -3,6 +3,7 @@ gltext is a wrapper around the Mu interface into the gltext library.
 It uses rv.runtime.eval to resolve functions on the fly. It may raise a glText.MuException if the runtime.eval failed.
 """
 
+import sys
 from rv import runtime
 
 
@@ -27,4 +28,4 @@ class glText(object):
                 raise glText.MuException("Could not successfully call %s. An exception was raised." % message)
         return f
 
-glText = glText()
+sys.modules[__name__] = glText()
