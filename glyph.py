@@ -23,7 +23,7 @@ from OpenGL.GLU import gluOrtho2D
 
 from rv import commands
 
-from .gltext import glText
+import gltext
 from .util import lerp, Color, BBox, TBox
 
 
@@ -579,14 +579,14 @@ class GlyphNamespace(object):
         if glyph_color is None:
             glyph_color = Color(0.2, 0.2, 0.2, 1)
 
-        glText.size(size)
+        gltext.size(size)
         if glyph is not None:
             text = "   " + text
 
-        bounds = glText.bounds(text)
+        bounds = gltext.bounds(text)
         width = bounds[2] + bounds[0]
-        ascender_height = glText.ascenderHeight()
-        decender_depth = glText.descenderDepth()
+        ascender_height = gltext.ascenderHeight()
+        decender_depth = gltext.descenderDepth()
         margin = (ascender_height - decender_depth) * 0.5
         x0 = x - margin
         x1 = x + width + margin
@@ -629,8 +629,8 @@ class GlyphNamespace(object):
             cls.draw(glyph, x, y_middle, 0, rad, True)
             
         glPopAttrib()
-        glText.color(text_color)
-        glText.writeAt(x, y, text)
+        gltext.color(text_color)
+        gltext.writeAt(x, y, text)
 
         return BBox(x0 - rad, y0, x1 + rad, y1)
 
@@ -692,8 +692,8 @@ class GlyphNamespace(object):
         
         """
         def bound_math(size, upper, lower):
-            glText.size(size)
-            bounds = glText.bounds(text)
+            gltext.size(size)
+            bounds = gltext.bounds(text)
             bwidth = bounds[0] + bounds[2]
             bheight = bounds[1] + bounds[3]
             if bwidth > width or bheight > height:
@@ -761,7 +761,7 @@ class GlyphNamespace(object):
         
         """
         def pair_bounds(size, title_names, prev_lower_bound, prev_upper_bound, w, h):
-            glText.size(size)
+            gltext.size(size)
             _pair_bound = cls.nameValuePairBounds(title_names, margin)
             if _pair_bound:
                 box = _pair_bound[0]
@@ -955,14 +955,14 @@ class GlyphNamespace(object):
         inregion = -1
 
         for index, descriptor in enumerate(descriptors):
-            glText.size(20)
+            gltext.size(20)
 
             y0 = base_size * index + margin + current_margins[3]
             x0 = current_margins[0] + margin
             y1 = base_size * (index + 1) - margin + current_margins[3]
             x1 = w - margin - current_margins[1]
 
-            bounds = glText.bounds(descriptor)
+            bounds = gltext.bounds(descriptor)
             total_width = bounds[2] + bounds[0]
             active = y0 <= y <= y1
             fg = Color(1, 1, 1, 1) if active else Color(0.5, 0.5, 0.5, 1)
@@ -972,12 +972,12 @@ class GlyphNamespace(object):
             if active:
                 inregion = index
 
-            glText.color(fg)
+            gltext.color(fg)
 
             write_x = (x1 - x0 - total_width) * 0.5 + x0
             write_y = lerp(y0, y1, 0.5)
 
-            glText.writeAt(write_x, write_y, descriptor)
+            gltext.writeAt(write_x, write_y, descriptor)
         return inregion
 
     @classmethod
@@ -1022,8 +1022,8 @@ class GlyphNamespace(object):
         name_width = 0
         value_width = 0
         height = 0
-        ascender_height = glText.ascenderHeight()
-        descender_depth = glText.descenderDepth()
+        ascender_height = gltext.ascenderHeight()
+        descender_depth = gltext.descenderDepth()
         text_height = ascender_height - descender_depth
         x0 = - descender_depth
         x1 = x0
@@ -1034,8 +1034,8 @@ class GlyphNamespace(object):
 
         for pair in pairs:
             name, value = pair
-            bounds_name = glText.bounds(name)
-            bounds_value = glText.bounds(value)
+            bounds_name = gltext.bounds(name)
+            bounds_value = gltext.bounds(value)
 
             name_bounds.append(bounds_name)
             value_bounds.append(bounds_value)
@@ -1179,8 +1179,8 @@ class GlyphNamespace(object):
         margin_copy = margin
         tbox, name_bounds, value_bounds, name_width = cls.nameValuePairBounds(pairs, margin_copy)
 
-        ascender_height = glText.ascenderHeight()
-        descender_depth = glText.descenderDepth()
+        ascender_height = gltext.ascenderHeight()
+        descender_depth = gltext.descenderDepth()
         text_height = ascender_height - descender_depth
 
         x0 = x - descender_depth
@@ -1219,10 +1219,10 @@ class GlyphNamespace(object):
             bounds_name = name_bounds[index]
             text_width = bounds_name[2] + bounds_name[0]
 
-            glText.color(fg - Color(0, 0, 0, 0.25))
-            glText.writeAt(x + (name_width - text_width), y, name)
-            glText.color(fg)
-            glText.write(x + name_width + margin_copy/2, y, value)
+            gltext.color(fg - Color(0, 0, 0, 0.25))
+            gltext.writeAt(x + (name_width - text_width), y, name)
+            gltext.color(fg)
+            gltext.write(x + name_width + margin_copy/2, y, value)
             y += text_height
             # if (index == s - 3):
             #     y += margin_copy/2
